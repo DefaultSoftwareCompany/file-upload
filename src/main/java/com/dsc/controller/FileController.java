@@ -20,10 +20,10 @@ public class FileController {
 
     @PostMapping("/save")
     public @ResponseBody
-    FileStorage save(@RequestParam MultipartFile image) throws IOException {
+    Long save(@RequestParam MultipartFile image) throws IOException {
         FileStorage fileStorage = new FileStorage();
         fileStorage.setContent(image.getBytes());
-        return repository.save(fileStorage);
+        return repository.save(fileStorage).getImageId();
     }
 
     @GetMapping(value = "/get/{imageId}", produces = MediaType.IMAGE_JPEG_VALUE)
