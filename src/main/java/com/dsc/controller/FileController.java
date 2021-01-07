@@ -20,10 +20,12 @@ public class FileController {
 
     @PostMapping("/save")
     public @ResponseBody
-    Long save(@RequestParam MultipartFile image) throws IOException {
-        FileStorage fileStorage = new FileStorage();
-        fileStorage.setContent(image.getBytes());
-        return repository.save(fileStorage).getImageId();
+    Long save(@RequestParam MultipartFile image, @RequestParam String password) throws IOException {
+        if (password.equals("Sunnat5427#")) {
+            FileStorage fileStorage = new FileStorage();
+            fileStorage.setContent(image.getBytes());
+            return repository.save(fileStorage).getImageId();
+        } else return null;
     }
 
     @GetMapping(value = "/get/{imageId}", produces = MediaType.IMAGE_JPEG_VALUE)
@@ -33,7 +35,9 @@ public class FileController {
     }
 
     @DeleteMapping("/delete/{imageId}")
-    public void delete(@PathVariable Long imageId) {
-        repository.deleteById(imageId);
+    public void delete(@PathVariable Long imageId, @RequestParam String password) {
+        if (password.equals("Sunnat5427#")) {
+            repository.deleteById(imageId);
+        }
     }
 }
