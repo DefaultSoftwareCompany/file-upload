@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @RestController
 public class FileController {
@@ -28,10 +29,16 @@ public class FileController {
         } else return null;
     }
 
-    @GetMapping(value = "/get/{imageId}", produces = MediaType.IMAGE_JPEG_VALUE)
+    @GetMapping(value = "/get/{imageId}", produces = {
+            MediaType.IMAGE_JPEG_VALUE,
+            MediaType.IMAGE_PNG_VALUE
+    }
+    )
     public @ResponseBody
-    byte[] getImage(@PathVariable Long imageId) {
-        return repository.getOne(imageId).getContent();
+    byte[] getImage(@PathVariable Long imageId) throws Exception {
+        Optional<FileStorage> image = repository.findById(imageId);
+        if (image.isPresent()) return image.get().getContent();
+        else throw new Exception("There is no image with such an id");
     }
 
     @DeleteMapping("/delete/{imageId}")
